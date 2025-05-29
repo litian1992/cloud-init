@@ -1,6 +1,11 @@
 # Azure specific rules
 ACTION!="add|change", GOTO="cloud_init_end"
 SUBSYSTEM!="block", GOTO="cloud_init_end"
+
+# NVMe disks
+ENV{ID_MODEL}=="MSFT NVMe Accelerator v1.0", ENV{fabric_name}="azure_root", GOTO="ci_azure_names"
+ENV{ID_MODEL}=="Microsoft NVMe Direct Disk v2", PROGRAM="/bin/sh -c 'echo %k|cut -c5'", ENV{fabric_name}="azure_resource%c", GOTO="ci_azure_names"
+
 ATTRS{ID_VENDOR}!="Msft", GOTO="cloud_init_end"
 ATTRS{ID_MODEL}!="Virtual_Disk", GOTO="cloud_init_end"
 
